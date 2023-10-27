@@ -19,7 +19,7 @@ const questions = [
       { text: "const", correct: true },
     ],
   },
-  ,
+
   {
     question: "What is the result of 2 + '2' in JavaScript?",
     answers: [
@@ -99,3 +99,98 @@ const questions = [
 ];
 
 // Variables
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+
+//Store Index and Score
+let currentQuestionIndex = 0;
+let score = 0;
+
+// Functions
+// StartQuiz
+function startQuiz() {
+  currentQuestionIndex = 0;
+  score = 0;
+  nextButton.innerHTML = "Next";
+  showQuestion();
+}
+
+// Show Question
+function showQuestion() {
+  //Reset State
+  resetState();
+  let currentQuestion = questions[currentQuestionIndex];
+  let questionNumber = currentQuestionIndex + 1;
+  questionElement.innerHTML = `${questionNumber} . ${currentQuestion.question}`;
+
+  //display answers: loop from answers from object
+  currentQuestion.answers.forEach((answer) => {
+    const button = document.createElement("button");
+    button.innerHTML = answer.text;
+    button.classList.add("btn");
+    answerButtons.appendChild(button);
+    // add event listener to button
+    if (answer.correct) {
+      button.dataset.correct = answer.correct;
+    }
+    button.addEventListener("click", selectAnswer);
+  });
+}
+
+// Reset State
+function resetState() {
+  nextButton.style.display = "none";
+  while (answerButtons.firstChild) {
+    answerButtons.removeChild(answerButtons.firstChild);
+  }
+}
+
+// Select Answer Function
+function selectAnswer(e) {
+  const selectedBtn = e.target;
+  // Check if the answer is correct and highlight it in green
+  const isCorrect = selectedBtn.dataset.correct === "true";
+  if (isCorrect) {
+    selectedBtn.classList.add("correct");
+    score++;
+  } else {
+    selectedBtn.classList.add("incorrect");
+  }
+  // Disable and highlight correct answers
+  Array.from(answerButtons.children).forEach((button) => {
+    if (button.dataset.correct === "true") {
+      button.classList.add("correct");
+    }
+    button.disabled = true;
+  });
+  // Show again the Next button, after select answer
+  nextButton.style.display = "block";
+}
+
+// Show Score Function
+function showScore() {
+  resetState();
+  questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
+  nextButton.innerHTML = "Play Again";
+  nextButton.style.display = "block";
+}
+// Function HandleNextButton
+function handleNextButton() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    showQuestion();
+  } else {
+    showScore();
+  }
+}
+
+nextButton.addEventListener("click", () => {
+  if (currentQuestionIndex < questions.length) {
+    handleNextButton();
+  } else {
+    startQuiz();
+  }
+});
+
+startQuiz();
