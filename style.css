@@ -79,3 +79,10 @@ body {
 .incorrect {
   background-color: #ff9393;
 }
+
+/* All correct */
+.all-correct {
+  color: green;
+  font-size: 1.1rem;
+  font-weight: 600;
+}

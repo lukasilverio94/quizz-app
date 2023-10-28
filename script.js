@@ -172,7 +172,7 @@ const questions = [
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
-
+var allCorrect = " ";
 //Store Index and Score
 let currentQuestionIndex = 0;
 let score = 0;
@@ -182,6 +182,7 @@ function startQuiz() {
   currentQuestionIndex = 0;
   score = 0;
   nextButton.innerHTML = "Next";
+  allCorrect.innerText = " ";
   showQuestion();
 }
 
@@ -244,11 +245,25 @@ function showScore() {
   nextButton.innerHTML = "Play Again";
   nextButton.style.display = "block";
 }
+
 // Function HandleNextButton
-function handleNextButton() {
+function handleNextButton(currentQuestion) {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
     showQuestion();
+  } // IF IS ALL CORRECT
+  else if (score === questions.length) {
+    // const allCorrect = document.createElement("div");
+    allCorrect = document.createElement("div");
+    allCorrect.classList.add("all-correct");
+    allCorrect.innerText = `Congratulations, you scored like a Pro 🎉✨!`;
+    const parentContainer = document.querySelector(".quiz");
+    parentContainer.insertBefore(
+      allCorrect,
+      parentContainer.querySelector("button").parentElement
+    );
+    showScore();
+    nextButton.innerHTML = "Play Again";
   } else {
     showScore();
   }
